@@ -22,5 +22,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-    // Puedes agregar más handlers para otras excepciones personalizadas
+    @ExceptionHandler(EmailYaRegistradoException.class)
+    public ResponseEntity<Object> handleEmailYaRegistrado(EmailYaRegistradoException ex, WebRequest request) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("mensaje", ex.getMessage());
+        body.put("ruta", request.getDescription(false));    
+
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
 }

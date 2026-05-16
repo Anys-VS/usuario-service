@@ -34,11 +34,12 @@ public class UsuarioController {
     }
 
     /**
-     * Crear usuario
+     * Registro de usuario (POST /usuarios/registro)
      */
-    @PostMapping
-    public ResponseEntity<UsuarioResponse> crear(@Valid @RequestBody UsuarioRequest request) {
-        return ResponseEntity.ok(usuarioService.crearUsuario(request));
+    @PostMapping("/registro")
+    public ResponseEntity<String> registrar(@Valid @RequestBody UsuarioRequest request) {
+        usuarioService.crearUsuario(request);
+        return ResponseEntity.ok("Usuario registrado correctamente");
     }
 
     /**

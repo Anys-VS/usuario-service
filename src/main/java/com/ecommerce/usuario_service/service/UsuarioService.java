@@ -63,6 +63,7 @@ public class UsuarioService {
         usuario.setEmail(request.getEmail());
         usuario.setDireccion(request.getDireccion());
         usuario.setTelefono(request.getTelefono());
+        usuario.setContrasena(request.getContrasena());
 
         Usuario actualizado = usuarioRepository.save(usuario);
         logger.info("Usuario actualizado: {}", actualizado.getEmail());
@@ -87,6 +88,7 @@ public class UsuarioService {
                 .email(request.getEmail())
                 .direccion(request.getDireccion())
                 .telefono(request.getTelefono())
+                .contrasena(request.getContrasena())
                 .build();
     }
 

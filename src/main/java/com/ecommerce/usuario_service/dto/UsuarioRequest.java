@@ -23,4 +23,6 @@ public class UsuarioRequest {
     //evaluar obligatoriedad de telefono quizas para recuperar contraseña
     private String telefono;
 
+    private String contrasena;
+
 }

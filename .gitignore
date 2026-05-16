@@ -31,3 +31,16 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### properties
+src/main/resources/application.properties
+
+### Oracle Wallet
+wallet/
+*.sso
+*.p12
+*.jks
+cwallet.sso
+ewallet.p12
+sqlnet.ora
+tnsnames.ora

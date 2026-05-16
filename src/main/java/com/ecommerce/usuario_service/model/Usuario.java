@@ -29,4 +29,7 @@ public class Usuario {
 
     @Column(nullable = false)
     private String telefono;
+
+    @Column(nullable = false)
+    private String contrasena;
 }
