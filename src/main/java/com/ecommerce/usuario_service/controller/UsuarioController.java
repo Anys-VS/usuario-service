@@ -67,6 +67,14 @@ public class UsuarioController {
     }
 
     /**
+     * Buscar usuario por email (usado internamente por el microservicio de autenticación)
+     */
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UsuarioResponse> obtenerPorEmail(@PathVariable String email) {
+        return ResponseEntity.ok(usuarioService.buscarPorEmail(email));
+    }
+
+    /**
      * Eliminar usuario
      */
     @DeleteMapping("/{id}")

@@ -5,6 +5,7 @@ import com.ecommerce.usuario_service.dto.UsuarioResponse;
 import com.ecommerce.usuario_service.model.Usuario;
 import com.ecommerce.usuario_service.repository.UsuarioRepository;
 
+import com.ecommerce.usuario_service.exception.EmailYaRegistradoException;
 import com.ecommerce.usuario_service.exception.UsuarioNoEncontradoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,21 +25,28 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    // Crear usuario
-    public UsuarioResponse crearUsuario(UsuarioRequest request) {
-        logger.info("Creando usuario con email: {}", request.getEmail());
-        Usuario usuario = toEntity(request);
-        Usuario usuarioGuardado = usuarioRepository.save(usuario);
-        logger.info("Usuario creado con id: {}", usuarioGuardado.getId());
-        return toResponse(usuarioGuardado);
-    }
-
     // Listar todos los usuarios
     public List<UsuarioResponse> listar() {
         logger.info("Listando todos los usuarios");
         return usuarioRepository.findAll().stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+    }
+
+        // Crear usuario
+    public UsuarioResponse crearUsuario(UsuarioRequest request) {
+        logger.info("Creando usuario con email: {}", request.getEmail());
+
+        // Regla de negocio: el email no puede estar ya registrado
+        if (usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
+            logger.warn("Intento de registro con email ya existente: {}", request.getEmail());
+            throw new EmailYaRegistradoException("El email " + request.getEmail() + " ya está registrado");
+        }
+
+        Usuario usuario = toEntity(request);
+        Usuario usuarioGuardado = usuarioRepository.save(usuario);
+        logger.info("Usuario creado con id: {}", usuarioGuardado.getId());
+        return toResponse(usuarioGuardado);
     }
 
     // Obtener usuario por ID
@@ -64,6 +72,7 @@ public class UsuarioService {
         usuario.setDireccion(request.getDireccion());
         usuario.setTelefono(request.getTelefono());
         usuario.setContrasena(request.getContrasena());
+        usuario.setRol(request.getRol() != null ? request.getRol() : usuario.getRol());
 
         Usuario actualizado = usuarioRepository.save(usuario);
         logger.info("Usuario actualizado: {}", actualizado.getEmail());
@@ -89,9 +98,18 @@ public class UsuarioService {
                 .direccion(request.getDireccion())
                 .telefono(request.getTelefono())
                 .contrasena(request.getContrasena())
+                .rol(request.getRol() != null ? request.getRol() : "USUARIO")
                 .build();
     }
 
+
+    // Buscar usuario por email (usado por el microservicio de autenticación)
+    public UsuarioResponse buscarPorEmail(String email) {
+        logger.info("Buscando usuario por email: {}", email);
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsuarioNoEncontradoException(0L));
+        return toResponse(usuario);
+    }
 
     private UsuarioResponse toResponse(Usuario usuario) {
         return UsuarioResponse.builder()
@@ -99,6 +117,8 @@ public class UsuarioService {
                 .nombre(usuario.getNombre())
                 .apellido(usuario.getApellido())
                 .email(usuario.getEmail())
+                .contrasena(usuario.getContrasena())
+                .rol(usuario.getRol())
                 .build();
     }
 }
