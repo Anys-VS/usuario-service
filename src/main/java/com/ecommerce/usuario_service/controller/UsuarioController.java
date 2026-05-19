@@ -39,7 +39,7 @@ public class UsuarioController {
     @PostMapping("/registro")
     public ResponseEntity<String> registrar(@Valid @RequestBody UsuarioRequest request) {
         usuarioService.crearUsuario(request);
-        return ResponseEntity.ok("Usuario registrado correctamente");
+        return ResponseEntity.ok("Usuario_registrado_correctamente");
     }
 
     /**

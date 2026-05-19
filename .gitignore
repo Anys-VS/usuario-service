@@ -44,3 +44,5 @@ cwallet.sso
 ewallet.p12
 sqlnet.ora
 tnsnames.ora
+
+.DS_Store
