@@ -39,7 +39,7 @@ public class UsuarioController {
     @PostMapping("/registro")
     public ResponseEntity<String> registrar(@Valid @RequestBody UsuarioRequest request) {
         usuarioService.crearUsuario(request);
-        return ResponseEntity.ok("Usuario registrado correctamente");
+        return ResponseEntity.ok("Usuario_registrado_correctamente");
     }
 
     /**
@@ -64,6 +64,14 @@ public class UsuarioController {
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioResponse> actualizar(@PathVariable Long id, @Valid @RequestBody UsuarioRequest request) {
         return ResponseEntity.ok(usuarioService.actualizar(id, request));
+    }
+
+    /**
+     * Buscar usuario por email (usado internamente por el microservicio de autenticación)
+     */
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UsuarioResponse> obtenerPorEmail(@PathVariable String email) {
+        return ResponseEntity.ok(usuarioService.buscarPorEmail(email));
     }
 
     /**

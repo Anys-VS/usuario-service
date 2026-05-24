@@ -23,6 +23,9 @@ public class UsuarioRequest {
     //evaluar obligatoriedad de telefono quizas para recuperar contraseña
     private String telefono;
 
+    @NotBlank(message = "La contrasena es obligatoria")
     private String contrasena;
+
+    private String rol;
 
 }

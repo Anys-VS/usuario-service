@@ -24,12 +24,15 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String direccion;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String telefono;
 
     @Column(nullable = false)
     private String contrasena;
+    @Column(nullable = false)
+    @Builder.Default
+    private String rol = "USUARIO";
 }
