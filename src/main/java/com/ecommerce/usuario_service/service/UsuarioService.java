@@ -18,16 +18,22 @@ public class UsuarioService {
     private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+
+
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
+
+    //** LISTAR TODOS LOS USUARIOS (ADMIN) */
     public List<UsuarioResponse> listar() {
         logger.info("Listando todos los usuarios");
         return usuarioRepository.findAll().stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
+
+    //** CREA AL USUARIO */
     public UsuarioResponse crearUsuario(UsuarioRequest request) {
         logger.info("Creando usuario con email: {}", request.getEmail());
         if (usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -41,6 +47,8 @@ public class UsuarioService {
         logger.info("Usuario creado con id: {}", usuarioGuardado.getId());
         return toResponse(usuarioGuardado);
     }
+
+    //** OBTIENE USUARIO POR ID (ADMIN) */
     public UsuarioResponse obtenerPorId(Long id) {
         logger.info("Buscando usuario con id: {}", id);
         Usuario usuario = usuarioRepository.findById(id)
@@ -48,6 +56,8 @@ public class UsuarioService {
         logger.info("Usuario encontrado: {}", usuario.getEmail());
         return toResponse(usuario);
     }
+
+    //** ACTUALIZAR USUARIO POR ID (ADMIN) */
     public UsuarioResponse actualizar(Long id, UsuarioRequest request) {
         logger.info("Actualizando usuario con id: {}", id);
         Usuario usuario = usuarioRepository.findById(id)
@@ -65,6 +75,8 @@ public class UsuarioService {
         logger.info("Usuario actualizado: {}", actualizado.getEmail());
         return toResponse(actualizado);
     }
+
+    //** ELIMINA USUARIO POR ID (ADMIN) */
     public void eliminar(Long id) {
         logger.info("Eliminando usuario con id: {}", id);
         Usuario usuario = usuarioRepository.findById(id)
@@ -72,6 +84,28 @@ public class UsuarioService {
         usuarioRepository.delete(usuario);
         logger.info("Usuario eliminado con id: {}", id);
     }
+
+    //** BUSCA USUARIO POR EMAIL (ADMIN) */
+    public UsuarioResponse buscarPorEmail(String email) {
+        logger.info("Buscando usuario por email: {}", email);
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsuarioNoEncontradoException(0L));
+        return toResponse(usuario);
+    }
+
+    //** MAPEA EL USUARIO PARA DTO */
+    private UsuarioResponse toResponse(Usuario usuario) {
+        return UsuarioResponse.builder()
+                .id(usuario.getId())
+                .nombre(usuario.getNombre())
+                .apellido(usuario.getApellido())
+                .email(usuario.getEmail())
+                .contrasena(usuario.getContrasena())
+                .rol(usuario.getRol())
+                .build();
+    }
+
+        //** TRAE LOS DATOS DE LA REQUEST */
     private Usuario toEntity(UsuarioRequest request) {
         return Usuario.builder()
                 .nombre(request.getNombre())
@@ -83,20 +117,5 @@ public class UsuarioService {
                 .rol(request.getRol() != null ? request.getRol() : "USUARIO")
                 .build();
     }
-    public UsuarioResponse buscarPorEmail(String email) {
-        logger.info("Buscando usuario por email: {}", email);
-        Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new UsuarioNoEncontradoException(0L));
-        return toResponse(usuario);
-    }
-    private UsuarioResponse toResponse(Usuario usuario) {
-        return UsuarioResponse.builder()
-                .id(usuario.getId())
-                .nombre(usuario.getNombre())
-                .apellido(usuario.getApellido())
-                .email(usuario.getEmail())
-                .contrasena(usuario.getContrasena())
-                .rol(usuario.getRol())
-                .build();
-    }
+
 }
