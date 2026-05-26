@@ -15,10 +15,11 @@ public class SecurityConfig{
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-            .requestMatchers(HttpMethod.GET, "/usuarios").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/usuarios/registro").permitAll()
+            .requestMatchers(HttpMethod.GET, "/usuarios/").hasRole("ADMIN")
             .requestMatchers(HttpMethod.GET, "/usuarios/{id}").hasRole("ADMIN")
             .requestMatchers(HttpMethod.PUT, "/usuarios/{id}").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.GET, "/usuarios/{email}").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/usuarios/email/{email}").permitAll()
             .requestMatchers(HttpMethod.GET, "/usuarios/mis-datos").hasAnyRole("USUARIO","ADMIN")
             .requestMatchers(HttpMethod.PUT, "/usuarios/mis-datos").hasAnyRole("USUARIO","ADMIN")
             //* PENDIENTE ELIMINACION POR USUARIO */
