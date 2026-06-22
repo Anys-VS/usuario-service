@@ -93,14 +93,13 @@ public class UsuarioService {
         return toResponse(usuario);
     }
 
-    //** MAPEA EL USUARIO PARA DTO */
+    //** MAPEA EL USUARIO PARA DTO, convierte un usuario(base de datos)en un UsuarioResponse lo que se manda por API */
     private UsuarioResponse toResponse(Usuario usuario) {
         return UsuarioResponse.builder()
                 .id(usuario.getId())
                 .nombre(usuario.getNombre())
                 .apellido(usuario.getApellido())
                 .email(usuario.getEmail())
-                .contrasena(usuario.getContrasena())
                 .rol(usuario.getRol())
                 .build();
     }

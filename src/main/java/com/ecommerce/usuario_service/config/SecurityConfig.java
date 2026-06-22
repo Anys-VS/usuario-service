@@ -15,11 +15,19 @@ public class SecurityConfig{
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                    // Swagger
+            .requestMatchers(
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/docs/**"
+            ).permitAll()
+
             .requestMatchers(HttpMethod.POST, "/usuarios/registro").permitAll()
-            .requestMatchers(HttpMethod.GET, "/usuarios/").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.GET, "/usuarios/{id}").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.PUT, "/usuarios/{id}").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.GET, "/usuarios/email/{email}").permitAll()
+            .requestMatchers(HttpMethod.GET, "/usuarios").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/usuarios/*").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.PUT, "/usuarios/*").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/usuarios/email/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/usuarios/mis-datos").hasAnyRole("USUARIO","ADMIN")
             .requestMatchers(HttpMethod.PUT, "/usuarios/mis-datos").hasAnyRole("USUARIO","ADMIN")
             //* PENDIENTE ELIMINACION POR USUARIO */
