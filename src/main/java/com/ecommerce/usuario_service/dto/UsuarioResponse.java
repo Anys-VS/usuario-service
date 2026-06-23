@@ -22,6 +22,9 @@ private String apellido;
 @Schema(example = "juan@gmail.com")
 private String email;
 
+@Schema(example = "1234567890")
+private String contrasena; 
+
 @Schema(example = "USUARIO")
 private String rol;
 }
